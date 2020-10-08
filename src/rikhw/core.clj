@@ -39,11 +39,9 @@
   [:tbody] (html/content (map #(singlematchsnippet %) matches)))
 
 (defn handler
-  "I don't do a whole lot."
+  "give client matches for the day"
   [req]
   (ring.util.response/response (reduce str (matchesindex (get-games2))))
-  ;;{ :status 200 :headers {"content-type" "text/html"} :body "Hey"}
-  ;;(ring.util.response/response "Hey man whatup...")
   )  
 
 (defn -main []
