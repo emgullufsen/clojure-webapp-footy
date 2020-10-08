@@ -1,14 +1,5 @@
 # rikhw
 
-A Clojure library designed to ... well, that part is up to you.
+A server-side clojure app for getting footy scores from the [football-data api](https://football-data.org)
 
-## Usage
-
-FIXME
-
-## License
-
-Copyright © 2020 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+![clojure logo](resources/images/clojure-logo.png "Clojure rulez")
