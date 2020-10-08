@@ -21,14 +21,18 @@
     ms
 ))
 
+(defn get-games1 []
+  (client/get matches-url headersmap))
+
 (defn get-games2 []
   (-> (client/get matches-url headersmap) :body json/read-str (#(% "matches"))))
 
 (def compnames (map (fn [c] (c "name")) comps))
 
 (html/defsnippet singlematchsnippet "rikhwtemplates/main.html" [:tr]
-  [team1]
-  [:td] (html/content team1))
+  [{{hn "name"} "homeTeam" {an "name"} "awayTeam"}]
+  [:#homeTeam] (html/content hn)
+  [:#awayTeam] (html/content an))
 
 (html/deftemplate matchesindex "rikhwtemplates/main.html"
   [matches]
@@ -37,7 +41,7 @@
 (defn handler
   "I don't do a whole lot."
   [req]
-  (ring.util.response/response (reduce str (matchesindex compnames)))
+  (ring.util.response/response (reduce str (matchesindex (get-games2))))
   ;;{ :status 200 :headers {"content-type" "text/html"} :body "Hey"}
   ;;(ring.util.response/response "Hey man whatup...")
   )  
