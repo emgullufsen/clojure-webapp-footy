@@ -20,12 +20,15 @@
     ms
 ))
 
+(defn get-games2 []
+  (-> (client/get matches-url headersmap) :body json/read-str (#(% "matches"))))
+
 (def compnames (map (fn [c] (c "name")) comps))
 
 (defn handler
   "I don't do a whole lot."
   [req]
-  (ring.util.response/response (str (first (get-games))))
+  (ring.util.response/response (str (first (get-games2))))
   ;;{ :status 200 :headers {"content-type" "text/html"} :body "Hey"}
   ;;(ring.util.response/response "Hey man whatup...")
   )  
