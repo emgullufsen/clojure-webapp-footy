@@ -2,7 +2,8 @@
   (:require [ring.util.response]
             [ring.adapter.jetty :as jetty]
             [clojure.data.json  :as json]
-            [clj-http.client    :as client]))
+            [clj-http.client    :as client]
+            [net.cgrand.enlive-html :as html]))
 
 (def base-url    "https://api.football-data.org/v2/")
 (def matches-url (str base-url "matches"))
@@ -25,10 +26,18 @@
 
 (def compnames (map (fn [c] (c "name")) comps))
 
+(html/defsnippet singlematchsnippet "rikhwtemplates/main.html" [:td]
+  [team1]
+  [:td] (html/content team1))
+
+(html/deftemplate matchesindex "rikhwtemplates/main.html"
+  [matches]
+  [:tbody] (html/content (map #(singlematchsnippet %) matches)))
+
 (defn handler
   "I don't do a whole lot."
   [req]
-  (ring.util.response/response (str (first (get-games2))))
+  (ring.util.response/response (reduce str (matchesindex compnames)))
   ;;{ :status 200 :headers {"content-type" "text/html"} :body "Hey"}
   ;;(ring.util.response/response "Hey man whatup...")
   )  

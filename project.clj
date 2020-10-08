@@ -7,5 +7,6 @@
                  [ring/ring-core "1.8.2"]
                  [ring/ring-jetty-adapter "1.8.2"]
                  [clj-http "3.10.3"]
-                 [org.clojure/data.json "0.2.7"]]
+                 [org.clojure/data.json "0.2.7"]
+                 [enlive "1.1.6"]]
   :main rikhw.core)
