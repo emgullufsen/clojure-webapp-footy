@@ -26,7 +26,7 @@
 
 (def compnames (map (fn [c] (c "name")) comps))
 
-(html/defsnippet singlematchsnippet "rikhwtemplates/main.html" [:td]
+(html/defsnippet singlematchsnippet "rikhwtemplates/main.html" [:tr]
   [team1]
   [:td] (html/content team1))
 
