@@ -9,5 +9,8 @@
                  [clj-http "3.10.3"]
                  [org.clojure/data.json "0.2.7"]
                  [enlive "1.1.6"]
-                 [com.ashafa/clutch "0.3.0"]]
+                 [com.ashafa/clutch "0.4.0"]
+                 [cheshire "5.10.0"]]
+  :plugins [[lein-ring "0.12.5"]]
+  :ring {:handler rikhw.core/handler}
   :main rikhw.core)
