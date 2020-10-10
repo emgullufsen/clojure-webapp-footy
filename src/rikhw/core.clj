@@ -105,11 +105,16 @@
   (let [gameDate  (get-in req [:params "gameDate"])
         localtime (l/format-local-time (l/local-now) :year-month-day)]
     (if gameDate
-      (respond-with ((get-data gameDate) :matches) gameDate)
-      (respond-with ((get-data localtime) :matches) localtime))))
+      (do 
+        (println "what up what up")
+        (respond-with ((get-data gameDate) :matches) gameDate))
+      (do
+        (println "sup dog")
+        (print (req :query-params))
+        (respond-with ((get-data localtime) :matches) localtime)))))
 
-(defn wrapped-handler []
-  (wrap-params handler))
+(def wrapped-handler
+  (-> handler wrap-params))
 
 (defn -main []
   ;; run that server boi! port three stacks

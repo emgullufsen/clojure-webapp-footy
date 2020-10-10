@@ -13,5 +13,5 @@
                  [cheshire "5.10.0"]
                  [clj-time "0.15.2"]]
   :plugins [[lein-ring "0.12.5"]]
-  :ring {:handler rikhw.core/handler}
+  :ring {:handler rikhw.core/wrapped-handler}
   :main rikhw.core)
