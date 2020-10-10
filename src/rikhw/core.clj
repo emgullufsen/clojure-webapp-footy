@@ -1,10 +1,16 @@
 (ns rikhw.core
   (:require [ring.util.response]
+            [ring.util.codec :as codec]
             [ring.adapter.jetty :as jetty]
             [clojure.data.json  :as json]
             [clj-http.client    :as client]
-            [net.cgrand.enlive-html :as html]))
+            [net.cgrand.enlive-html :as html]
+            [com.ashafa.clutch :as clutch]
+            [ring.middleware.params :refer [wrap-params]]
+            [clj-time.core :as t]
+            [clj-time.local :as l]))
 
+(def dbs "http://admin:gullie06@localhost:5984/testeric2")
 (def base-url    "https://api.football-data.org/v2/")
 (def matches-url (str base-url "matches"))
 (def comps-url   (str base-url "competitions"))
@@ -21,11 +27,36 @@
     ms
 ))
 
-(defn get-games1 []
+(defn get-date-key [gamesdata] ((gamesdata "filters") "dateFrom"))
+
+(defn save-or-update-games [data]
+  (clutch/with-db dbs
+    (let [dk (get-date-key data)
+          dc (clutch/get-document dk)]
+      (clutch/put-document (merge dc {:_id dk} data)))))
+
+(defn get-data [datestring] 
+  (clutch/with-db dbs
+    (let [dbdoc (clutch/get-document datestring)]
+      (if dbdoc
+        dbdoc
+        (let
+          [ms (-> (client/get (str matches-url "?" 
+                                   (codec/form-encode 
+                                     { :dateFrom datestring :dateTo datestring}))
+                              headersmap)
+                  :body
+                  json/read-str)]
+          (save-or-update-games ms))))))
+
+(defn get-response []
   (client/get matches-url headersmap))
 
-(defn get-games2 []
-  (-> (client/get matches-url headersmap) :body json/read-str (#(% "matches"))))
+(defn get-json []
+  (-> (get-response) :body json/read-str))
+
+(defn get-matches-vector []
+  (-> (get-json) (#(% "matches"))))
 
 (def compnames (map (fn [c] (c "name")) comps))
 
@@ -38,12 +69,18 @@
   [matches]
   [:tbody] (html/content (map #(singlematchsnippet %) matches)))
 
+(defn respond-with [mv]
+  (ring.util.response/response (reduce str (matchesindex (mv)))))
+
 (defn handler
   "give client matches for the day"
   [req]
-  (ring.util.response/response (reduce str (matchesindex (get-games2))))
+  (ring.util.response/response (reduce str (matchesindex (get-matches-vector))))
   )  
+
+(defn wrapped-handler []
+  (wrap-params handler))
 
 (defn -main []
   ;; run that server boi! port three stacks
-  (jetty/run-jetty handler {:port 3000}))
+  (jetty/run-jetty wrapped-handler {:port 3000}))
