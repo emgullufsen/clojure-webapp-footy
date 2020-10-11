@@ -110,7 +110,7 @@
 
 (html/defsnippet singleplayersnippet "rikhwtemplates/main.html" [:li]
   [{namey :name}]
-  [:li] (html/content namey))
+  [:span] (html/content namey))
 
 (html/defsnippet singlematchsnippet "rikhwtemplates/main.html" [:tr]
   [{{hn :name} :homeTeam {an :name} :awayTeam {squadHome :squad} :htizzle {squadAway :squad} :atizzle}]
