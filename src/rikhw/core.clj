@@ -111,14 +111,18 @@
 
 (html/defsnippet singlematchsnippet "rikhwtemplates/main.html" [:tr]
   [{{hn :name} :homeTeam {an :name} :awayTeam {homeCrestUrl :crestUrl squadHome :squad homeColors :clubColors} :htizzle {awayCrestUrl :crestUrl squadAway :squad awayColors :clubColors} :atizzle}]
-  [:.homeTeam] (let [colors (stringy/split homeColors #" ")
-                     color1 (get colors 0)
-                     color2 (get colors 2)]
+  [:.homeTeam] (if homeColors 
+                (let [colors (stringy/split homeColors #" ")
+                      color1 (get colors 0)
+                      color2 (get colors 2)]
                   (html/set-attr :style (str "background-color: " color1 "; " "border-color: " color2 ";")))
-  [:.awayTeam] (let [colors (stringy/split awayColors #" ")
-                     color1 (get colors 0)
-                     color2 (get colors 2)]
+                  (html/set-attr :style ""))
+  [:.awayTeam] (if awayColors
+                (let [colors (stringy/split awayColors #" ")
+                      color1 (get colors 0)
+                      color2 (get colors 2)]
                   (html/set-attr :style (str "background-color: " color1 "; " "border-color: " color2 ";")))
+                  (html/set-attr :style ""))
   [:.homeTeamImage] (html/set-attr :src homeCrestUrl)
   [:.awayTeamImage] (html/set-attr :src awayCrestUrl)
   [:.homeTeamCaption] (html/content hn)
