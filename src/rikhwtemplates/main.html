@@ -31,7 +31,7 @@
 		vertical-align: top;
 		background-size: contain;
 		background-repeat: no-repeat;
-
+		border: solid 4px;
 	}
 
 	.redski {
@@ -46,6 +46,9 @@
 		transition-timing-function: ease;
 		transition-duration: 1s;
 		
+	}
+	img {
+		max-width: 100px;
 	}
 </style>
 <script>
@@ -73,22 +76,23 @@
 		<table>
 			<tbody>
 				<tr>
-					<td id="homeTeam">
-						<span id="homeTeamName"></span>
+					<td class="homeTeam">
 						<figure>
-							<img id="homeTeamImage">
-							<figcaption id="homeTeamCaption"></figcaption>
+							<img class="homeTeamImage" alt="home team image">
+							<figcaption class="homeTeamCaption"></figcaption>
 						</figure>
-						<ul class="hidey" id="homeTeamPlayers">
+						<ul class="hidey homeTeamPlayers">
 							<li>
 								<span></span>
 							</li>
 						</ul>
 					</td>
-					<td id="awayTeam">
-						<span id="awayTeamName"></span>
-
-						<ul class="hidey" id="awayTeamPlayers">
+					<td class="awayTeam">
+						<figure>
+							<img alt="away team image" class="awayTeamImage">
+							<figcaption class="awayTeamCaption"></figcaption>
+						</figure>
+						<ul class="hidey awayTeamPlayers">
 						</ul>
 					</td>
 					<td><button onclick="setHidey(this)">Show Rosters</button></td>
