@@ -22,15 +22,7 @@
 (def comps 
   ((json/read-str ((client/get comps-url headersmap) :body)) "competitions"))
 
-(defn get-games []
-  (let [resp (client/get matches-url headersmap)
-        bod  (resp :body)
-        jb   (json/read-str bod)
-        ms   (jb  "matches")]
-    ms
-))
-
-(defn get-date-key [gamesdata] ((gamesdata "filters") "dateFrom"))
+(defn get-date-key [gamesdata] ((gamesdata :filters) :dateFrom))
 
 (defn get-home-id [m] (-> m :homeTeam :id))
 (defn get-away-id [m] (-> m :awayTeam :id))
@@ -42,15 +34,19 @@
       (clutch/put-document (merge dc {:_id dk} data)))))
 
 (defn hit-api [datestring] 
-  (-> (client/get (str matches-url "?" 
-                       (codec/form-encode { :dateFrom datestring :dateTo datestring}))
-                  headersmap)
-      :body
-      json/read-str))
+  (let [resp (client/get (str matches-url "?" (codec/form-encode { :dateFrom datestring :dateTo datestring})) headersmap)
+        bod  (resp :body)]
+      (do
+        (println "hitting api (hit-api)")
+        (json/read-str bod :key-fn keyword)
+        )))
 
 (defn gen-hit [url]
-  (let [resp (client/get url headersmap)]
-    (-> resp :body json/read-str)))
+  (let [resp (client/get url headersmap)
+        bod  (resp :body)]
+      (do
+        (println (str "hitting api (gen-hit)" url))
+        (json/read-str bod :key-fn keyword))))
 
 (defn teams-url [id] (str base-url "teams/" id))
 
@@ -59,12 +55,14 @@
     (let [team-doc (clutch/get-document id)
           tu       (teams-url id)]
       (if team-doc
-        team-doc
-        (let [teamdat (gen-hit tu)
-              tid     (str (teamdat "id"))]
-          (do
-            (clutch/put-document (merge {:_id tid} teamdat))
-            (clutch/get-document tid)))))))
+        (do
+          (println "*from db")
+          team-doc)
+        (let [teamdat (gen-hit tu) 
+              tid     (str (teamdat :id))]
+            (do
+              (println "*new")
+              (clutch/put-document (merge {:_id tid} teamdat))))))))
 
 (defn add-teams-to-matches [matches]
   (map (fn [m] (merge m {:htizzle (get-team (get-home-id m)) :atizzle (get-team (get-away-id m))})) matches))
@@ -93,9 +91,7 @@
             dbdoc))
         (let
           [ms (hit-api datestring)]
-          (do
-            (save-or-update-games ms)
-            (clutch/get-document datestring)))))))
+            (save-or-update-games ms))))))
 
 (defn get-response []
   (client/get matches-url headersmap))

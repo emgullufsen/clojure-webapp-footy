@@ -1,29 +1,60 @@
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>enlive template try</title>
-	</head>
-	<body>
-		<a id="yesterday" href="">Yesterday's Games</a>
-		<a id="tomorrow" href="">Tomorrow's Games</a>
-		<table>
-			<tbody>
-				<tr>
-					<td id="homeTeam">
-						<span id="homeTeamName"></span>
-						<ul id="homeTeamPlayers">
-							<li>
-								<span></span>
-							</li>
-						</ul>
-					</td>
-					<td id="awayTeam">
-						<span id="awayTeamName"></span>
-						<ul id="awayTeamPlayers">
-						</ul>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</body>
+
+<head>
+	<meta charset="utf-8">
+	<title>enlive template try</title>
+</head>
+<style>
+	.hidey {
+		display: none;
+	}
+
+	.redski {
+		color: red;
+	}
+</style>
+<script>
+	function setHidey(but) {
+		const h = 'hidey';
+		var ulToChangeList = but.parentElement.parentElement.getElementsByTagName('ul');
+		for (var i = 0; i < ulToChangeList.length; i++){
+			var el = ulToChangeList[i];
+			if (el.classList.contains(h)) {
+				el.classList.remove(h);
+			}
+			else {
+				el.classList.add(h);
+			}
+		}
+	}
+</script>
+
+<body>
+	<a id="yesterday" href="">Yesterday's Games</a>
+	<a id="tomorrow" href="">Tomorrow's Games</a>
+	<a onclick="this.classList.add('redski')">Turn Red</a>
+	<table>
+		<tbody>
+			<tr>
+				<td id="homeTeam">
+					<span id="homeTeamName"></span>
+					
+					<ul class="hidey" id="homeTeamPlayers">
+						<li>
+							<span></span>
+						</li>
+					</ul>
+				</td>
+				<td id="awayTeam">
+					<span id="awayTeamName"></span>
+					
+					<ul class="hidey" id="awayTeamPlayers">
+					</ul>
+				</td>
+				<td><button onclick="setHidey(this)">Show Rosters</button></td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+
 </html>
