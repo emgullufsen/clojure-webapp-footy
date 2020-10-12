@@ -2,22 +2,58 @@
 
 <head>
 	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>enlive template try</title>
 </head>
 <style>
+	.eric-wrapper {
+		width: 70%;
+		max-width: 60em;
+		margin: 0 auto;
+		position: relative;
+		min-height: 100%;
+		height: auto;
+
+	}
+
 	.hidey {
-		display: none;
+		max-height: 0;
+		
+	}
+
+	@media screen and (max-width:865px) {
+		.eric-wrapper {
+			width: 100%
+		}
+	}
+
+	td {
+		vertical-align: top;
+		background-size: contain;
+		background-repeat: no-repeat;
+
 	}
 
 	.redski {
 		color: red;
 	}
+
+	ul {
+		overflow: hidden;
+		max-height: 100vh;
+		background-color: rgba(0,0,0,0.5);
+		transition-property: max-height;
+		transition-timing-function: ease;
+		transition-duration: 1s;
+		
+	}
 </style>
 <script>
+	// accepts button and shows/hides ul in same tr as that button
 	function setHidey(but) {
 		const h = 'hidey';
 		var ulToChangeList = but.parentElement.parentElement.getElementsByTagName('ul');
-		for (var i = 0; i < ulToChangeList.length; i++){
+		for (var i = 0; i < ulToChangeList.length; i++) {
 			var el = ulToChangeList[i];
 			if (el.classList.contains(h)) {
 				el.classList.remove(h);
@@ -30,31 +66,37 @@
 </script>
 
 <body>
-	<a id="yesterday" href="">Yesterday's Games</a>
-	<a id="tomorrow" href="">Tomorrow's Games</a>
-	<a onclick="this.classList.add('redski')">Turn Red</a>
-	<table>
-		<tbody>
-			<tr>
-				<td id="homeTeam">
-					<span id="homeTeamName"></span>
-					
-					<ul class="hidey" id="homeTeamPlayers">
-						<li>
-							<span></span>
-						</li>
-					</ul>
-				</td>
-				<td id="awayTeam">
-					<span id="awayTeamName"></span>
-					
-					<ul class="hidey" id="awayTeamPlayers">
-					</ul>
-				</td>
-				<td><button onclick="setHidey(this)">Show Rosters</button></td>
-			</tr>
-		</tbody>
-	</table>
+	<div class="eric-wrapper">
+		<a id="yesterday" href="">Yesterday's Games</a>
+		<a id="tomorrow" href="">Tomorrow's Games</a>
+		<a onclick="this.classList.add('redski')">Turn Red</a>
+		<table>
+			<tbody>
+				<tr>
+					<td id="homeTeam">
+						<span id="homeTeamName"></span>
+						<figure>
+							<img id="homeTeamImage">
+							<figcaption id="homeTeamCaption"></figcaption>
+						</figure>
+						<ul class="hidey" id="homeTeamPlayers">
+							<li>
+								<span></span>
+							</li>
+						</ul>
+					</td>
+					<td id="awayTeam">
+						<span id="awayTeamName"></span>
+
+						<ul class="hidey" id="awayTeamPlayers">
+						</ul>
+					</td>
+					<td><button onclick="setHidey(this)">Show Rosters</button></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
 </body>
 
 </html>

@@ -56,12 +56,12 @@
           tu       (teams-url id)]
       (if team-doc
         (do
-          (println "*from db")
+          ;;(println "*from db")
           team-doc)
         (let [teamdat (gen-hit tu) 
               tid     (str (teamdat :id))]
             (do
-              (println "*new")
+              ;;(println "*new")
               (clutch/put-document (merge {:_id tid} teamdat))))))))
 
 (defn add-teams-to-matches [matches]
@@ -109,7 +109,9 @@
   [:span] (html/content namey))
 
 (html/defsnippet singlematchsnippet "rikhwtemplates/main.html" [:tr]
-  [{{hn :name} :homeTeam {an :name} :awayTeam {squadHome :squad} :htizzle {squadAway :squad} :atizzle}]
+  [{{hn :name} :homeTeam {an :name} :awayTeam {homeCrestUrl :crestUrl squadHome :squad} :htizzle {awayCrestUrl :crestUrl squadAway :squad} :atizzle}]
+  [:#homeTeam] (html/set-attr :style (str "background-image: url(" homeCrestUrl ");"))
+  [:#awayTeam] (html/set-attr :style (str "background-image: url(" awayCrestUrl ");"))
   [:#homeTeamName] (html/content hn)
   [:#awayTeamName] (html/content an)
   [:#homeTeamPlayers] (html/content (map #(singleplayersnippet %) squadHome))
@@ -139,11 +141,11 @@
         localtime (l/format-local-time (l/local-now) :year-month-day)]
     (if gameDate
       (do 
-        (println "gameDate found in query string")
+        ;;(println "gameDate found in query string")
         (respond-with (-> ((get-data gameDate) :matches) add-teams-to-matches) gameDate))
       (do
-        (println "no query param found")
-        (print (req :query-params))
+        ;;(println "no query param found")
+        ;;(print (req :query-params))
         (respond-with (-> ((get-data localtime) :matches) add-teams-to-matches) localtime)))))
 
 (def wrapped-handler
