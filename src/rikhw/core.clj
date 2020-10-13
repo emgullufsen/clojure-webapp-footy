@@ -115,14 +115,30 @@
                 (let [colors (stringy/split homeColors #" ")
                       color1 (get colors 2)
                       color2 (get colors 0)]
-                  (html/set-attr :style (str "background-color: " color1 "; " "border-color: " color2 ";")))
+                  (do 
+                    (html/set-attr :style (str "background-color: " color1 "; " "border-color: " color2 "; "))
+                    ))
                   (html/set-attr :style ""))
   [:.awayTeam] (if awayColors
                 (let [colors (stringy/split awayColors #" ")
                       color1 (get colors 2)
                       color2 (get colors 0)]
-                  (html/set-attr :style (str "background-color: " color1 "; " "border-color: " color2 ";")))
+                  (html/set-attr :style (str "background-color: " color1 "; " "border-color: " color2 "; ")))
                   (html/set-attr :style ""))
+  [:.homeFigure] (if homeColors 
+                  (let [colors (stringy/split homeColors #" ")
+                        color2 (get colors 0)]
+                    (do 
+                      (html/set-attr :style (str "box-shadow: 5px 5px 5px 5px " color2 ";"))
+                    ))
+                  (html/set-attr :style "box-shadow: 5px 5px 5px 5px black"))
+  [:.awayFigure] (if awayColors 
+                  (let [colors (stringy/split awayColors #" ")
+                        color2 (get colors 0)]
+                    (do 
+                      (html/set-attr :style (str "box-shadow: 5px 5px 5px 5px " color2 ";"))
+                    ))
+                  (html/set-attr :style "box-shadow: 5px 5px 5px 5px black"))     
   [:.homeTeamImage] (html/set-attr :src homeCrestUrl)
   [:.awayTeamImage] (html/set-attr :src awayCrestUrl)
   [:.homeTeamCaption] (html/content hn)
