@@ -108,37 +108,29 @@
 (html/defsnippet singleplayersnippet "rikhwtemplates/main.html" [:li]
   [{namey :name}]
   [:span] (html/content namey))
+(defmulti get-colors identity)
+
+(defmethod get-colors nil [string]
+  ["White" "Black"])
+
+(defmethod get-colors :default [instring]
+  (let [splitz (stringy/split instring #" ")]
+    (if (> (count splitz) 2)
+      [(get splitz 0) (get splitz 2)]
+      ["White" "Black"])))
+
+(defmulti get-style-string (fn [[c1 c2]] (= c2 "White")))
+
+(defmethod get-style-string true [[c1 c2]]
+  (str "background-color: " c1 "; " "border-style: double;"))
+
+(defmethod get-style-string :default [[c1 c2]]
+  (str "background-color: " c1 "; " "border-color: " c2 ";"))
 
 (html/defsnippet singlematchsnippet "rikhwtemplates/main.html" [:tr]
   [{{hn :name} :homeTeam {an :name} :awayTeam {homeCrestUrl :crestUrl squadHome :squad homeColors :clubColors} :htizzle {awayCrestUrl :crestUrl squadAway :squad awayColors :clubColors} :atizzle}]
-  [:.homeTeam] (if homeColors 
-                (let [colors (stringy/split homeColors #" ")
-                      color1 (get colors 2)
-                      color2 (get colors 0)]
-                  (do 
-                    (html/set-attr :style (str "background-color: " color1 "; " "border-color: " color2 "; "))
-                    ))
-                  (html/set-attr :style ""))
-  [:.awayTeam] (if awayColors
-                (let [colors (stringy/split awayColors #" ")
-                      color1 (get colors 2)
-                      color2 (get colors 0)]
-                  (html/set-attr :style (str "background-color: " color1 "; " "border-color: " color2 "; ")))
-                  (html/set-attr :style ""))
-  [:.homeFigure] (if homeColors 
-                  (let [colors (stringy/split homeColors #" ")
-                        color2 (get colors 0)]
-                    (do 
-                      (html/set-attr :style (str "box-shadow: 5px 5px 5px 5px " color2 ";"))
-                    ))
-                  (html/set-attr :style "box-shadow: 5px 5px 5px 5px black"))
-  [:.awayFigure] (if awayColors 
-                  (let [colors (stringy/split awayColors #" ")
-                        color2 (get colors 0)]
-                    (do 
-                      (html/set-attr :style (str "box-shadow: 5px 5px 5px 5px " color2 ";"))
-                    ))
-                  (html/set-attr :style "box-shadow: 5px 5px 5px 5px black"))     
+  [:.homeTeam] (html/set-attr :style (-> homeColors get-colors get-style-string))
+  [:.awayTeam] (html/set-attr :style (-> awayColors get-colors get-style-string))
   [:.homeTeamImage] (html/set-attr :src homeCrestUrl)
   [:.awayTeamImage] (html/set-attr :src awayCrestUrl)
   [:.homeTeamCaption] (html/content hn)
