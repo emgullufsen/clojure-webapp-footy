@@ -113,14 +113,14 @@
   [{{hn :name} :homeTeam {an :name} :awayTeam {homeCrestUrl :crestUrl squadHome :squad homeColors :clubColors} :htizzle {awayCrestUrl :crestUrl squadAway :squad awayColors :clubColors} :atizzle}]
   [:.homeTeam] (if homeColors 
                 (let [colors (stringy/split homeColors #" ")
-                      color1 (get colors 0)
-                      color2 (get colors 2)]
+                      color1 (get colors 2)
+                      color2 (get colors 0)]
                   (html/set-attr :style (str "background-color: " color1 "; " "border-color: " color2 ";")))
                   (html/set-attr :style ""))
   [:.awayTeam] (if awayColors
                 (let [colors (stringy/split awayColors #" ")
-                      color1 (get colors 0)
-                      color2 (get colors 2)]
+                      color1 (get colors 2)
+                      color2 (get colors 0)]
                   (html/set-attr :style (str "background-color: " color1 "; " "border-color: " color2 ";")))
                   (html/set-attr :style ""))
   [:.homeTeamImage] (html/set-attr :src homeCrestUrl)
