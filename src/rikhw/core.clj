@@ -29,10 +29,9 @@
 (defn get-away-id [m] (-> m :awayTeam :id))
 
 (defn save-or-update-games [data]
-  (clutch/with-db dbs
-    (let [dk (get-date-key data)
-          dc (clutch/get-document dk)]
-      (clutch/put-document (merge dc {:_id dk} data)))))
+  (let [dk (get-date-key data)]
+    (clutch/with-db dbs
+      (clutch/put-document (assoc data :_id dk)))))
 
 (defn hit-api [datestring] 
   (let [resp (client/get (str matches-url "?" (codec/form-encode { :dateFrom datestring :dateTo datestring})) headersmap)
@@ -63,7 +62,7 @@
               tid     (str (teamdat :id))]
             (do
               ;;(println "*new")
-              (clutch/put-document (merge {:_id tid} teamdat))))))))
+              (clutch/put-document (assoc teamdat :_id tid))))))))
 
 (defn add-teams-to-matches [matches]
   (map (fn [m] (merge m {:htizzle (get-team (get-home-id m)) :atizzle (get-team (get-away-id m))})) matches))
