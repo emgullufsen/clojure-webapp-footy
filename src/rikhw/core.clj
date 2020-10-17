@@ -87,7 +87,7 @@
         (let [matches (dbdoc :matches)
               nu      (some needs-update? matches)]
           (if nu
-            (save-or-update-games (hit-api datestring))
+            (save-or-update-games (assoc (hit-api datestring) :_rev (dbdoc :_rev)))
             dbdoc))
         (let
           [ms (hit-api datestring)]
