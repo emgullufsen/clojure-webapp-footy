@@ -28,11 +28,6 @@
 (defn get-home-id [m] (-> m :homeTeam :id))
 (defn get-away-id [m] (-> m :awayTeam :id))
 
-(defn save-or-update-games [data]
-  (let [dk (get-date-key data)]
-    (clutch/with-db dbs
-      (clutch/put-document (assoc data :_id dk)))))
-
 (defn hit-api [datestring] 
   (let [resp (client/get (str matches-url "?" (codec/form-encode { :dateFrom datestring :dateTo datestring})) headersmap)
         bod  (resp :body)]
@@ -86,15 +81,6 @@
           [ms (hit-api datestring)
            dd (get-date-key ms)]
           (clutch/put-document (assoc ms :_id dd)))))))
-
-(defn get-response []
-  (client/get matches-url headersmap))
-
-(defn get-json []
-  (-> (get-response) :body json/read-str))
-
-(defn get-matches-vector []
-  (-> (get-json) (#(% "matches"))))
 
 (html/defsnippet singleplayersnippet "rikhwtemplates/main.html" [:li]
   [{namey :name}]
