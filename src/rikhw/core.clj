@@ -21,11 +21,7 @@
 (def db-teams (str db-base "teams"))
 (def base-url    "https://api.football-data.org/v2/")
 (def matches-url (str base-url "matches"))
-(def comps-url   (str base-url "competitions"))
 (def headersmap  {:throw-exceptions false :headers {"X-AUTH-TOKEN" "1a65e8acccdb47949431186d2d4ea406"}}) 
-
-(def comps 
-  ((json/read-str ((client/get comps-url headersmap) :body)) "competitions"))
 
 (defn get-date-key [gamesdata] ((gamesdata :filters) :dateFrom))
 
@@ -100,11 +96,10 @@
 (defn get-matches-vector []
   (-> (get-json) (#(% "matches"))))
 
-(def compnames (map (fn [c] (c "name")) comps))
-
 (html/defsnippet singleplayersnippet "rikhwtemplates/main.html" [:li]
   [{namey :name}]
   [:span] (html/content namey))
+
 (defmulti get-colors identity)
 
 (defmethod get-colors nil [string]
@@ -125,7 +120,8 @@
   (str "background-color: " c1 "; " "border-color: " c2 ";"))
 
 (html/defsnippet singlematchsnippet "rikhwtemplates/main.html" [:tr]
-  [{{hn :name} :homeTeam {an :name} :awayTeam {homeCrestUrl :crestUrl squadHome :squad homeColors :clubColors} :htizzle {awayCrestUrl :crestUrl squadAway :squad awayColors :clubColors} :atizzle}]
+  [{scoreobj :score {hn :name} :homeTeam {an :name} :awayTeam {homeCrestUrl :crestUrl squadHome :squad homeColors :clubColors} :htizzle {awayCrestUrl :crestUrl squadAway :squad awayColors :clubColors} :atizzle}]
+  [:.scoreSpot] (html/content (str (-> scoreobj :fullTime :homeTeam) " - " (-> scoreobj :fullTime :awayTeam)))
   [:.homeTeam] (html/set-attr :style (-> homeColors get-colors get-style-string))
   [:.awayTeam] (html/set-attr :style (-> awayColors get-colors get-style-string))
   [:.homeTeamImage] (html/set-attr :src homeCrestUrl)
@@ -135,14 +131,16 @@
   [:.homeTeamPlayers] (html/content (map #(singleplayersnippet %) squadHome))
   [:.awayTeamPlayers] (html/content (map #(singleplayersnippet %) squadAway)))
 
-;; I know these are ugly but I can't be bothered to refactor to use thread -> macro
+(def formatter (tf/formatters :year-month-day))
+(def oneday (t/days 1))
+
 (defn add-day [s]
   "accepts [string] as arg in YYYY-MM-DD format and returns next days string"
-  (local/format-local-time (t/plus (tf/parse (tf/formatters :year-month-day) s) (t/days 1)) :year-month-day))
+  (local/format-local-time (t/plus (tf/parse formatter s) oneday) :year-month-day))
 
 (defn subtract-day [s]
   "accepts [string] as arg in YYYY-MM-DD format and returns previous days string"
-  (local/format-local-time (t/minus (tf/parse (tf/formatters :year-month-day) s) (t/days 1)) :year-month-day))
+  (local/format-local-time (t/minus (tf/parse formatter s) oneday) :year-month-day))
 
 (html/deftemplate matchesindex "rikhwtemplates/main.html"
   [matches day]
