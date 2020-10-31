@@ -8,11 +8,15 @@
             [com.ashafa.clutch :as clutch]
             [ring.middleware.params :refer [wrap-params]]
             [clj-time.core :as t]
-            [clj-time.local :as l]
+            [clj-time.local :as local]
             [clj-time.format :as tf]
-            [clojure.string :as stringy]))
+            [clojure.string :as stringy]
+            [clojure.edn :as cedn]))
 
-(def db-base "http://admin:gullie06@localhost:5984/")
+(def unpwdobj (cedn/read-string (slurp "src/rikhw/unpwd.edn")))
+(def un (unpwdobj :un))
+(def pwd (unpwdobj :pwd))
+(def db-base (str "http://" un ":" pwd "@localhost:5984/"))
 (def dbs (str db-base "testeric2"))
 (def db-teams (str db-base "teams"))
 (def base-url    "https://api.football-data.org/v2/")
@@ -36,17 +40,12 @@
 (defn hit-api [datestring] 
   (let [resp (client/get (str matches-url "?" (codec/form-encode { :dateFrom datestring :dateTo datestring})) headersmap)
         bod  (resp :body)]
-      (do
-        (println "hitting api (hit-api)")
-        (json/read-str bod :key-fn keyword)
-        )))
+        (json/read-str bod :key-fn keyword)))
 
 (defn gen-hit [url]
   (let [resp (client/get url headersmap)
         bod  (resp :body)]
-      (do
-        (println (str "hitting api (gen-hit)" url))
-        (json/read-str bod :key-fn keyword))))
+        (json/read-str bod :key-fn keyword)))
 
 (defn teams-url [id] (str base-url "teams/" id))
 
@@ -55,14 +54,10 @@
     (let [team-doc (clutch/get-document id)
           tu       (teams-url id)]
       (if team-doc
-        (do
-          ;;(println "*from db")
-          team-doc)
+          team-doc
         (let [teamdat (gen-hit tu) 
               tid     (str (teamdat :id))]
-            (do
-              ;;(println "*new")
-              (clutch/put-document (assoc teamdat :_id tid))))))))
+              (clutch/put-document (assoc teamdat :_id tid)))))))
 
 (defn add-teams-to-matches [matches]
   (map (fn [m] (merge m {:htizzle (get-team (get-home-id m)) :atizzle (get-team (get-away-id m))})) matches))
@@ -70,7 +65,7 @@
 (defn needs-update? [m]
   "checks if a game needs to update score from API"
   (let [[utcDate lastUpdated] (map #(tf/parse (tf/formatters :date-time-no-ms) %) [(m :utcDate) (m :lastUpdated)])
-        localtime (l/local-now)
+        localtime (local/local-now)
         status (m :status)]
     (if (t/after? localtime utcDate) 
       (if (t/before? lastUpdated utcDate)
@@ -87,11 +82,14 @@
         (let [matches (dbdoc :matches)
               nu      (some needs-update? matches)]
           (if nu
-            (save-or-update-games (assoc (hit-api datestring) :_rev (dbdoc :_rev)))
+            (let [ud (hit-api datestring)
+                  dd (get-date-key ud)]
+              (clutch/put-document (assoc ud :_id dd :_rev (dbdoc :_rev))))
             dbdoc))
         (let
-          [ms (hit-api datestring)]
-            (save-or-update-games ms))))))
+          [ms (hit-api datestring)
+           dd (get-date-key ms)]
+          (clutch/put-document (assoc ms :_id dd)))))))
 
 (defn get-response []
   (client/get matches-url headersmap))
@@ -140,11 +138,11 @@
 ;; I know these are ugly but I can't be bothered to refactor to use thread -> macro
 (defn add-day [s]
   "accepts [string] as arg in YYYY-MM-DD format and returns next days string"
-  (l/format-local-time (t/plus (tf/parse (tf/formatters :year-month-day) s) (t/days 1)) :year-month-day))
+  (local/format-local-time (t/plus (tf/parse (tf/formatters :year-month-day) s) (t/days 1)) :year-month-day))
 
 (defn subtract-day [s]
   "accepts [string] as arg in YYYY-MM-DD format and returns previous days string"
-  (l/format-local-time (t/minus (tf/parse (tf/formatters :year-month-day) s) (t/days 1)) :year-month-day))
+  (local/format-local-time (t/minus (tf/parse (tf/formatters :year-month-day) s) (t/days 1)) :year-month-day))
 
 (html/deftemplate matchesindex "rikhwtemplates/main.html"
   [matches day]
@@ -159,15 +157,11 @@
   "give client matches for the day"
   [req]
   (let [gameDate  (get-in req [:params "gameDate"])
-        localtime (l/format-local-time (l/local-now) :year-month-day)]
-    (if gameDate
-      (do 
-        ;;(println "gameDate found in query string")
-        (respond-with (-> ((get-data gameDate) :matches) add-teams-to-matches) gameDate))
-      (do
-        ;;(println "no query param found")
-        ;;(print (req :query-params))
-        (respond-with (-> ((get-data localtime) :matches) add-teams-to-matches) localtime)))))
+        localtime (local/format-local-time (local/local-now) :year-month-day)
+        useDate (if gameDate gameDate localtime)
+        useData (get-data useDate)
+        useDataM (-> useData :matches add-teams-to-matches)]
+    (respond-with useDataM useDate)))
 
 (def wrapped-handler
   (-> handler wrap-params))
