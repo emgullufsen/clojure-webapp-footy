@@ -18,7 +18,7 @@
 (def base-url    "https://api.football-data.org/v2/")
 (def matches-url (str base-url "matches"))
 (def comps-url   (str base-url "competitions"))
-(def headersmap  {:headers {"X-AUTH-TOKEN" "1a65e8acccdb47949431186d2d4ea406"}}) 
+(def headersmap  {:throw-exceptions false :headers {"X-AUTH-TOKEN" "1a65e8acccdb47949431186d2d4ea406"}}) 
 
 (def comps 
   ((json/read-str ((client/get comps-url headersmap) :body)) "competitions"))
@@ -137,6 +137,7 @@
   [:.homeTeamPlayers] (html/content (map #(singleplayersnippet %) squadHome))
   [:.awayTeamPlayers] (html/content (map #(singleplayersnippet %) squadAway)))
 
+;; I know these are ugly but I can't be bothered to refactor to use thread -> macro
 (defn add-day [s]
   "accepts [string] as arg in YYYY-MM-DD format and returns next days string"
   (l/format-local-time (t/plus (tf/parse (tf/formatters :year-month-day) s) (t/days 1)) :year-month-day))
