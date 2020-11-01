@@ -51,7 +51,7 @@
               (clutch/put-document (assoc teamdat :_id tid)))))))
 
 (defn add-teams-to-matches [matches]
-  (map (fn [m] (merge m {:htizzle (get-team (get-home-id m)) :atizzle (get-team (get-away-id m))})) matches))
+  (map (fn [m] (assoc m :htizzle (get-team (get-home-id m)) :atizzle (get-team (get-away-id m)))) matches))
 
 (defn needs-update? [m]
   "checks if a game needs to update score from API"
