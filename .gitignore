@@ -10,3 +10,4 @@ pom.xml.asc
 .hgignore
 .hg/
 /src/rikhw/unpwd.edn
+/resources/unpwd.edn

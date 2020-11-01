@@ -13,7 +13,7 @@
             [clojure.string :as stringy]
             [clojure.edn :as cedn]))
 
-(def unpwdobj (cedn/read-string (slurp "src/rikhw/unpwd.edn")))
+(def unpwdobj (cedn/read-string (slurp "resources/unpwd.edn")))
 (def un (unpwdobj :un))
 (def pwd (unpwdobj :pwd))
 (def db-base (str "http://" un ":" pwd "@localhost:5984/"))
