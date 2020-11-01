@@ -1,7 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [Unreleased]
+## Unreleased
+
+## 0.1.1 - 2020-11-01
 ### Changed
 - added viewport tag for mobile scaling.
 - scores added to displayed matches (full-time only, not very smart)
@@ -14,5 +16,5 @@ All notable changes to this project will be documented in this file. This change
 - first version of app 
 - clojure app front-end of Daniel's [football-data api](http://football-data.org)
 
-[Unreleased]: https://github.com/your-name/rikhw/compare/0.1.1...HEAD
-[0.1.1]: https://github.com/your-name/rikhw/compare/0.1.0...0.1.1
+[Unreleased]: https://gitlab.com/emgullufsen/clojure-webapp-footy 
+[0.1.1]: https://rickysquid.org/clojure-footy
