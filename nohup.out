@@ -1,0 +1,20 @@
+2020-11-01 07:44:55.470:INFO::main: Logging initialized @2810ms to org.eclipse.jetty.util.log.StdErrLog
+2020-11-01 07:45:04.098:INFO:oejs.Server:main: jetty-9.4.31.v20200723; built: 2020-07-23T17:57:36.812Z; git: 450ba27947e13e66baa8cd1ce7e85a4461cacc1d; jvm 11.0.9+11-Ubuntu-0ubuntu1.18.04.1
+2020-11-01 07:45:04.178:INFO:oejs.AbstractConnector:main: Started ServerConnector@f5b81f4{HTTP/1.1, (http/1.1)}{0.0.0.0:3000}
+2020-11-01 07:45:04.179:INFO:oejs.Server:main: Started @11518ms
+Started server on port 3000
+2020-11-01 07:50:30.865:INFO::main: Logging initialized @2938ms to org.eclipse.jetty.util.log.StdErrLog
+2020-11-01 07:50:38.888:INFO:oejs.Server:main: jetty-9.4.31.v20200723; built: 2020-07-23T17:57:36.812Z; git: 450ba27947e13e66baa8cd1ce7e85a4461cacc1d; jvm 11.0.9+11-Ubuntu-0ubuntu1.18.04.1
+2020-11-01 07:50:38.964:INFO:oejs.AbstractConnector:main: Started ServerConnector@4c020e58{HTTP/1.1, (http/1.1)}{0.0.0.0:3000}
+2020-11-01 07:50:38.965:INFO:oejs.Server:main: Started @11038ms
+Started server on port 3000
+2020-11-01 21:27:51.595:INFO::main: Logging initialized @3019ms to org.eclipse.jetty.util.log.StdErrLog
+2020-11-01 21:28:00.354:INFO:oejs.Server:main: jetty-9.4.31.v20200723; built: 2020-07-23T17:57:36.812Z; git: 450ba27947e13e66baa8cd1ce7e85a4461cacc1d; jvm 11.0.9+11-Ubuntu-0ubuntu1.18.04.1
+2020-11-01 21:28:00.423:INFO:oejs.AbstractConnector:main: Started ServerConnector@f5b81f4{HTTP/1.1, (http/1.1)}{0.0.0.0:3000}
+2020-11-01 21:28:00.428:INFO:oejs.Server:main: Started @11852ms
+Started server on port 3000
+2020-11-01 22:02:30.089:INFO::main: Logging initialized @3112ms to org.eclipse.jetty.util.log.StdErrLog
+2020-11-01 22:02:38.785:INFO:oejs.Server:main: jetty-9.4.31.v20200723; built: 2020-07-23T17:57:36.812Z; git: 450ba27947e13e66baa8cd1ce7e85a4461cacc1d; jvm 11.0.9+11-Ubuntu-0ubuntu1.18.04.1
+2020-11-01 22:02:38.862:INFO:oejs.AbstractConnector:main: Started ServerConnector@4c020e58{HTTP/1.1, (http/1.1)}{0.0.0.0:3000}
+2020-11-01 22:02:38.863:INFO:oejs.Server:main: Started @11886ms
+Started server on port 3000
