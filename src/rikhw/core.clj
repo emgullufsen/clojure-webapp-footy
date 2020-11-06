@@ -15,8 +15,7 @@
 	    [clojure.java.io :as io]))
 
 (def unpwd-file (io/resource "unpwd.edn"))
-(if (nil? unpwd-file) (set! unpwd-file (io/resource "unpwd-test.edn")))
-(def unpwdobj (cedn/read-string (slurp unpwd-file)))
+(def unpwdobj (if (nil? unpwd-file) {:un "test" :pwd "test"} (cedn/read-string (slurp unpwd-file))))
 (def un (unpwdobj :un))
 (def pwd (unpwdobj :pwd))
 (def db-base (str "http://" un ":" pwd "@localhost:5984/"))
