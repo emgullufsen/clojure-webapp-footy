@@ -2,6 +2,7 @@
   (:require [clojure.test :refer :all]
             [rikhw.core :refer :all]))
 
-(deftest a-test
-  (testing "FIXME, I fail."
-    (is (= 0 1))))
+(def team-map {:homeTeam {:id 7} :awayTeam {:id 89}})
+
+(deftest get-home-id-check
+    (is (= (get-home-id team-map) 7)))

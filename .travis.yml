@@ -1,0 +1,4 @@
+language: clojure
+lein: lein
+dist: bionic
+script: lein test
