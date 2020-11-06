@@ -11,9 +11,11 @@
             [clj-time.local :as local]
             [clj-time.format :as tf]
             [clojure.string :as stringy]
-            [clojure.edn :as cedn]))
+            [clojure.edn :as cedn]
+	    [clojure.java.io :as io]))
 
-(def unpwdobj (cedn/read-string (slurp "resources/unpwd.edn")))
+(def unpwd-file (io/resource "unpwd.edn"))
+(def unpwdobj (cedn/read-string (slurp unpwd-file)))
 (def un (unpwdobj :un))
 (def pwd (unpwdobj :pwd))
 (def db-base (str "http://" un ":" pwd "@localhost:5984/"))
