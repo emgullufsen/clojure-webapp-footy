@@ -25,8 +25,6 @@
 (defn get-db-string-teams [] (get-db-base-plus "teams"))
 (defn get-db-string-testeric2 [] (get-db-base-plus "testeric2"))
 
-(def dbs (str (get-db-base) "testeric2"))
-(def db-teams (str (get-db-base) "teams"))
 (def base-url    "https://api.football-data.org/v2/")
 (def matches-url (str base-url "matches"))
 (defn get-headersmap [] 
