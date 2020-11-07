@@ -14,46 +14,66 @@
             [clojure.edn :as cedn]
 	    [clojure.java.io :as io]))
 
-(def unpwd-file (io/resource "unpwd.edn"))
-(def unpwdobj (if (nil? unpwd-file) {:un "test" :pwd "test"} (cedn/read-string (slurp unpwd-file))))
-(def un (unpwdobj :un))
-(def pwd (unpwdobj :pwd))
-(def db-base (str "http://" un ":" pwd "@localhost:5984/"))
-(def dbs (str db-base "testeric2"))
-(def db-teams (str db-base "teams"))
+(defn get-db-base [] 
+  (let [unpwd-file (io/resource "unpwd.edn")
+        unpwdobj (cedn/read-string (slurp unpwd-file))
+        un (unpwdobj :un)
+        pwd (unpwdobj :pwd)]
+    (str "http://" un ":" pwd "@localhost:5984/")))
+
+(defn get-db-base-plus [db] (str (get-db-base) db))
+(defn get-db-string-teams [] (get-db-base-plus "teams"))
+(defn get-db-string-testeric2 [] (get-db-base-plus "testeric2"))
+
 (def base-url    "https://api.football-data.org/v2/")
 (def matches-url (str base-url "matches"))
-(def headersmap  {:throw-exceptions false :headers {"X-AUTH-TOKEN" "1a65e8acccdb47949431186d2d4ea406"}}) 
+(defn get-headersmap [] 
+  (let [unpwd-file (io/resource "unpwd.edn")
+        unpwdobj (cedn/read-string (slurp unpwd-file))
+        xauth (unpwdobj :xauth)]
+    {:throw-exceptions false :headers {"X-AUTH-TOKEN" xauth}}))
 
 (defn get-date-key [gamesdata] ((gamesdata :filters) :dateFrom))
 
 (defn get-home-id [m] (-> m :homeTeam :id))
 (defn get-away-id [m] (-> m :awayTeam :id))
 
-(defn hit-api [datestring] 
-  (let [resp (client/get (str matches-url "?" (codec/form-encode { :dateFrom datestring :dateTo datestring})) headersmap)
-        bod  (resp :body)]
-        (json/read-str bod :key-fn keyword)))
+(defn e-encode [s] (codec/form-encode {:dateFrom s :dateTo s}))
 
-(defn gen-hit [url]
-  (let [resp (client/get url headersmap)
-        bod  (resp :body)]
-        (json/read-str bod :key-fn keyword)))
+(defn get-stuff-from-api [urlstring headersobj] 
+  (let [resp (client/get urlstring headersobj)
+        status (resp :status)
+        statuspeek (not (= status 200))]
+    (if statuspeek
+      nil
+      (json/read-str (resp :body) :key-fn keyword))))
+
+(defn get-matches-from-api [datestring headersobj]
+  (let [url-plus-qs (str matches-url "?" (e-encode datestring))]
+    (get-stuff-from-api url-plus-qs headersobj)))
 
 (defn teams-url [id] (str base-url "teams/" id))
 
-(defn get-team [id]
+(defn get-team [id db-teams headers]
   (clutch/with-db db-teams
     (let [team-doc (clutch/get-document id)
           tu       (teams-url id)]
       (if team-doc
           team-doc
-        (let [teamdat (gen-hit tu) 
-              tid     (str (teamdat :id))]
-              (clutch/put-document (assoc teamdat :_id tid)))))))
+          (let [teamdat (get-stuff-from-api tu headers)]
+            (if (nil? teamdat)
+              nil
+              (let [tid (str (teamdat :id))]
+                (clutch/put-document (assoc teamdat :_id tid)))))))))        
 
-(defn add-teams-to-matches [matches]
-  (map (fn [m] (assoc m :htizzle (get-team (get-home-id m)) :atizzle (get-team (get-away-id m)))) matches))
+(defn add-teams-to-matches [matches db-teams headers]
+  (map (fn [m]
+         (let [hid (get-home-id m)
+               aid (get-away-id m)
+               ht (get-team hid db-teams headers)
+               at (get-team aid db-teams headers)]
+           (assoc m :htizzle ht :atizzle at))) 
+       matches))
 
 (defn needs-update? [m]
   "checks if a game needs to update score from API"
@@ -68,21 +88,30 @@
           false))
       false)))
 
-(defn get-data [datestring] 
+(defn get-data [datestring dbs headers] 
   (clutch/with-db dbs
     (let [dbdoc (clutch/get-document datestring)]
       (if dbdoc
         (let [matches (dbdoc :matches)
               nu      (some needs-update? matches)]
           (if nu
-            (let [ud (hit-api datestring)
-                  dd (get-date-key ud)]
-              (clutch/put-document (assoc ud :_id dd :_rev (dbdoc :_rev))))
+            (let [ud (get-matches-from-api datestring headers)]
+              (if (nil? ud) 
+                dbdoc 
+                (clutch/put-document (assoc ud :_id (get-date-key ud) :_rev (dbdoc :_rev)))))
             dbdoc))
         (let
-          [ms (hit-api datestring)
-           dd (get-date-key ms)]
-          (clutch/put-document (assoc ms :_id dd)))))))
+          [ms (get-matches-from-api datestring headers)]
+          (if (nil? ms)
+            nil
+            (clutch/put-document (assoc ms :_id (get-date-key ms)))))))))
+
+(defn assemble-page-data [datestring]
+  (let [matches-db-string (get-db-string-testeric2)
+        teams-db-string (get-db-string-teams)
+        headers (get-headersmap)
+        dat ((get-data datestring matches-db-string headers) :matches)]
+    (add-teams-to-matches dat teams-db-string headers)))
 
 (html/defsnippet singleplayersnippet "rikhwtemplates/main.html" [:li]
   [{namey :name}]
@@ -145,8 +174,7 @@
   (let [gameDate  (get-in req [:params "gameDate"])
         localtime (local/format-local-time (local/local-now) :year-month-day)
         useDate (if gameDate gameDate localtime)
-        useData (get-data useDate)
-        useDataM (-> useData :matches add-teams-to-matches)]
+        useDataM (assemble-page-data useDate)]
     (respond-with useDataM useDate)))
 
 (def wrapped-handler

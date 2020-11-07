@@ -13,5 +13,7 @@
                  [cheshire "5.10.0"]
                  [clj-time "0.15.2"]]
   :plugins [[lein-ring "0.12.5"]]
+  :test-selectors {:default (complement :with-db)
+                 :with-db :with-db}
   :ring {:handler rikhw.core/wrapped-handler}
   :main rikhw.core)
