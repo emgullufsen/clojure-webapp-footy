@@ -2,7 +2,7 @@ language: clojure
 lein: lein
 dist: bionic
 install:
-- apt-get install ansible
+- sudo apt-get install ansible
 script: 
 - lein test
 - lein ring uberjar
