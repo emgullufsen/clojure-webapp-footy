@@ -11,7 +11,8 @@
                  [enlive "1.1.6"]
                  [com.ashafa/clutch "0.4.0"]
                  [cheshire "5.10.0"]
-                 [clj-time "0.15.2"]]
+                 [clj-time "0.15.2"]
+                 [environ "1.2.0"]]
   :plugins [[lein-ring "0.12.5"]]
   :test-selectors {:default (complement :with-db)
                  :with-db :with-db}

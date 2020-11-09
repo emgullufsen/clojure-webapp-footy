@@ -12,14 +12,11 @@
             [clj-time.format :as tf]
             [clojure.string :as stringy]
             [clojure.edn :as cedn]
-	    [clojure.java.io :as io]))
+	          [clojure.java.io :as io]
+            [environ.core :as environ]))
 
-(defn get-db-base [] 
-  (let [unpwd-file (io/resource "unpwd.edn")
-        unpwdobj (cedn/read-string (slurp unpwd-file))
-        un (unpwdobj :un)
-        pwd (unpwdobj :pwd)]
-    (str "http://" un ":" pwd "@localhost:5984/")))
+(defn get-db-base []
+  (environ/env :couch-db-string))
 
 (defn get-db-base-plus [db] (str (get-db-base) db))
 (defn get-db-string-teams [] (get-db-base-plus "teams"))
@@ -27,11 +24,8 @@
 
 (def base-url    "https://api.football-data.org/v2/")
 (def matches-url (str base-url "matches"))
-(defn get-headersmap [] 
-  (let [unpwd-file (io/resource "unpwd.edn")
-        unpwdobj (cedn/read-string (slurp unpwd-file))
-        xauth (unpwdobj :xauth)]
-    {:throw-exceptions false :headers {"X-AUTH-TOKEN" xauth}}))
+;;:throw-exceptions false 
+(defn get-headersmap [] {:throw-exceptions false :headers {"X-AUTH-TOKEN" (environ/env :football-data-api-xauth)}})
 
 (defn get-date-key [gamesdata] ((gamesdata :filters) :dateFrom))
 
