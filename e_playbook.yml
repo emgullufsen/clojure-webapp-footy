@@ -15,5 +15,5 @@
   - name: restart the clojure-footy service
     service:
       name: clojure-footy-service
-      state: restart
+      state: restarted
     become: yes
