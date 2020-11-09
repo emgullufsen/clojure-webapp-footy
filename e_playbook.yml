@@ -1,0 +1,19 @@
+---
+- name: copy example dummy
+  hosts: all
+  remote_user: apper
+  
+  tasks:
+  - name: just hustle a file for proof-of-concept
+    copy:
+      src: ./example.txt
+      dest: $HOME/example_dest.txt
+  - name: move over the jar
+    copy: 
+      src: target/rikhw-0.1.1-SNAPSHOT-standalone.jar
+      dest: $HOME/exec_spot/clojure-footy.jar
+  - name: restart the clojure-footy service
+    service:
+      name: clojure-footy-service
+      state: restart
+    become: yes
