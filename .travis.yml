@@ -2,3 +2,6 @@ language: clojure
 lein: lein
 dist: bionic
 script: lein test
+before_install:
+- openssl aes-256-cbc -K $encrypted_dfdcfd5172af_key -iv $encrypted_dfdcfd5172af_iv
+  -in deploy_key.enc -out ./deploy_key -d
