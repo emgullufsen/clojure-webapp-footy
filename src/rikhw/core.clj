@@ -12,8 +12,10 @@
             [clj-time.format :as tf]
             [clojure.string :as stringy]
             [clojure.edn :as cedn]
-	          [clojure.java.io :as io]
-            [environ.core :as environ]))
+	    [clojure.java.io :as io]
+            [environ.core :as environ]
+            )
+  (:gen-class))
 
 (defn get-db-base []
   (environ/env :couch-db-string))

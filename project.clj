@@ -17,4 +17,5 @@
   :test-selectors {:default (complement :with-db)
                  :with-db :with-db}
   :ring {:handler rikhw.core/wrapped-handler}
-  :main rikhw.core)
+  :main rikhw.core
+  :profiles {:uberjar {:aot :all}})
