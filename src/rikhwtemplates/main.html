@@ -13,63 +13,7 @@
         content="yet another front-end to the football-data api, this time written in clojure">
 	<meta name="twitter:image" content="https://rickysquid.org/images/clojure-footy-screenshot-resized.png">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<style>
-	.eric-wrapper {
-		width: 70%;
-		max-width: 60em;
-		margin: 0 auto;
-		position: relative;
-		min-height: 100%;
-		height: auto;
-
-	}
-
-	.hidey {
-		max-height: 0;
-		
-	}
-
-	@media screen and (max-width:865px) {
-		.eric-wrapper {
-			width: 100%
-		}
-	}
-
-	td {
-		vertical-align: top;
-		background-size: contain;
-		background-repeat: no-repeat;
-		border: solid 4px;
-	}
-
-	.redski {
-		color: red;
-	}
-
-	ul {
-		overflow: hidden;
-		max-height: 100vh;
-		background-color: rgba(255,255,255,0.7);
-		transition-property: max-height;
-		transition-timing-function: ease;
-		transition-duration: 1s;
-		
-	}
-	img {
-		max-width: 100px;
-	}
-	figure {
-		background-color: white;
-		text-align: center;
-	}
-	.button-cellz {
-		border: none;
-	}
-	.scoreSpot {
-		border: none;
-		
-	}
-</style>
+	<link href="css/scores.css" rel="stylesheet" type="text/css">
 <script>
 	// accepts button and shows/hides ul in same tr as that button
 	function setHidey(but) {

@@ -1,0 +1,55 @@
+.eric-wrapper {
+    width: 70%;
+    max-width: 60em;
+    margin: 0 auto;
+    position: relative;
+    min-height: 100%;
+    height: auto;
+
+}
+
+.hidey {
+    max-height: 0;
+    
+}
+
+@media screen and (max-width:865px) {
+    .eric-wrapper {
+        width: 100%
+    }
+}
+
+td {
+    vertical-align: top;
+    background-size: contain;
+    background-repeat: no-repeat;
+    border: solid 4px;
+}
+
+.redski {
+    color: red;
+}
+
+ul {
+    overflow: hidden;
+    max-height: 100vh;
+    background-color: rgba(255,255,255,0.7);
+    transition-property: max-height;
+    transition-timing-function: ease;
+    transition-duration: 1s;
+    
+}
+img {
+    max-width: 100px;
+}
+figure {
+    background-color: white;
+    text-align: center;
+}
+.button-cellz {
+    border: none;
+}
+.scoreSpot {
+    border: none;
+    
+}
