@@ -1,7 +1,7 @@
-const buttons = document.querySelectorAll('.btn')
+const buttons = document.querySelectorAll('button');
 buttons.forEach(function(currentBtn){
-  currentBtn.addEventListener('click', setHidey)
-})
+  currentBtn.addEventListener('click', setHidey);
+});
 
 // accepts button and shows/hides ul in same tr as that button
 function setHidey() {
