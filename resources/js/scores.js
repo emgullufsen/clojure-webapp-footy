@@ -1,7 +1,12 @@
+const buttons = document.querySelectorAll('.btn')
+buttons.forEach(function(currentBtn){
+  currentBtn.addEventListener('click', setHidey)
+})
+
 // accepts button and shows/hides ul in same tr as that button
-function setHidey(but) {
+function setHidey() {
     const h = 'hidey';
-    var ulToChangeList = but.parentElement.parentElement.getElementsByTagName('ul');
+    var ulToChangeList = this.parentElement.parentElement.getElementsByTagName('ul');
     for (var i = 0; i < ulToChangeList.length; i++) {
         var el = ulToChangeList[i];
         if (el.classList.contains(h)) {
