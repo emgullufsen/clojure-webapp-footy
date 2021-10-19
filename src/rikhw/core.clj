@@ -175,7 +175,7 @@
     (respond-with useDataM useDate)))
 
 (def wrapped-handler
-  (-> handler wrap-content-type wrap-params))
+  (-> handler (ring.util.response/header "Content-Type" "text/html; charset=utf-8") wrap-params))
 
 (defn -main []
   ;; run that server boi! port three stacks
