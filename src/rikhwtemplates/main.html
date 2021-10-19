@@ -5,32 +5,18 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>today's matches - clojure</title>
 	<link rel="icon" type="image/svg+xml" href="https://rickysquid.org/images/clojure-logo.svg">
-    	<meta name="twitter:card" content="summary_large_image">
-    	<meta name="twitter:site" content="@rickygully">
-    	<meta name="twitter:creator" content="@rickygully">
-    	<meta name="twitter:title" content="clojure footy">
-    	<meta name="twitter:description"
-        content="yet another front-end to the football-data api, this time written in clojure">
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:site" content="@rickygully">
+	<meta name="twitter:creator" content="@rickygully">
+	<meta name="twitter:title" content="clojure footy">
+	<meta name="twitter:description"
+		content="yet another front-end to the football-data api, this time written in clojure">
 	<meta name="twitter:image" content="https://rickysquid.org/images/clojure-footy-screenshot-resized.png">
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link href="scores.css" rel="stylesheet" type="text/css">
-<script>
-	// accepts button and shows/hides ul in same tr as that button
-	function setHidey(but) {
-		const h = 'hidey';
-		var ulToChangeList = but.parentElement.parentElement.getElementsByTagName('ul');
-		for (var i = 0; i < ulToChangeList.length; i++) {
-			var el = ulToChangeList[i];
-			if (el.classList.contains(h)) {
-				el.classList.remove(h);
-			}
-			else {
-				el.classList.add(h);
-			}
-		}
-	}
-</script>
+	<script src="scores.js"></script>
 </head>
+
 <body>
 	<div class="eric-wrapper">
 		<h1><a href="https://rickysquid.org">ricky y chooch</a></h1>
