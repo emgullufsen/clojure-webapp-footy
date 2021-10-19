@@ -7,6 +7,7 @@
             [net.cgrand.enlive-html :as html]
             [com.ashafa.clutch :as clutch]
             [ring.middleware.params :refer [wrap-params]]
+            [ring.middleware.content-type :refer [wrap-content-type]]
             [clj-time.core :as t]
             [clj-time.local :as local]
             [clj-time.format :as tf]
@@ -174,7 +175,7 @@
     (respond-with useDataM useDate)))
 
 (def wrapped-handler
-  (-> handler wrap-params))
+  (-> handler wrap-content-type wrap-params))
 
 (defn -main []
   ;; run that server boi! port three stacks
