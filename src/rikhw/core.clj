@@ -163,7 +163,7 @@
   [:#tomorrow] (html/set-attr :href (str "?" (codec/form-encode {:gameDate (add-day day)}))))
 
 (defn respond-with [mv gd]
-  (ring.util.response/response (reduce str (matchesindex mv gd))))
+  (-> (ring.util.response/response (reduce str (matchesindex mv gd)))) (ring.util.response/header "Content-Type" "text/html; charset=utf-8"))
 
 (defn handler
   "give client matches for the day"
@@ -175,7 +175,7 @@
     (respond-with useDataM useDate)))
 
 (def wrapped-handler
-  (-> handler (ring.util.response/header "Content-Type" "text/html; charset=utf-8") wrap-params))
+  (-> handler wrap-params))
 
 (defn -main []
   ;; run that server boi! port three stacks
