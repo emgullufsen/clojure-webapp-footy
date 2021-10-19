@@ -176,7 +176,7 @@
     (respond-with useDataM useDate)))
 
 (def wrapped-handler
-  (-> handler (wrap-resource "css") (wrap-params)))
+  (-> handler (wrap-resource "css") (wrap-params) (wrap-content-type)))
 
 (defn -main []
   ;; run that server boi! port three stacks
